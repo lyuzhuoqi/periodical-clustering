@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        
+        data.addRows(
+          [['Agricultural and Biological Sciences',
+  'plant,food,agriculture,biotechnology,biology',
+  557],
+ ['Agricultural and Biological Sciences',
+  'ecology,entomology,biology,zoology,marine',
+  568],
+ ['Arts and Humanities',
+  'linguistics,philosophy,language,history,psychology',
+  427],
+ ['Arts and Humanities', 'history,literature,american,culture,jewish', 718],
+ ['Biochemistry, Genetics and Molecular Biology',
+  'cell,molecular,biology,medicine,immunology',
+  586],
+ ['Business, Management and Accounting',
+  'management,business,marketing,accounting,entrepreneurship',
+  583],
+ ['Chemistry', 'chemistry,materials,physics,polymer,engineering', 315],
+ ['Computer Science',
+  'intelligence,computing,information,artificial,engineering',
+  326],
+ ['Earth and Planetary Sciences',
+  'geology,earth,water,environmental,geophysics',
+  430],
+ ['Economics, Econometrics and Finance',
+  'economics,finance,politics,economy,markets',
+  476],
+ ['Engineering', 'engineering,mechanic,technology,materials,energy', 614],
+ ['Engineering', 'electric,ieee,engineering,power,communications', 258],
+ ['Environmental Science',
+  'geology,earth,water,environmental,geophysics',
+  250],
+ ['Materials Science', 'chemistry,materials,physics,polymer,engineering', 343],
+ ['Mathematics', 'mathematics,applications,algebra,equations,physics', 600],
+ ['Medicine', 'neurology,neuroscience,clinical,ophthalmology,brain', 394],
+ ['Medicine', 'sports,medicine,rehabilitation,orthopaedics,surgery', 278],
+ ['Medicine', 'psychology,nursing,psychiatry,social,mental', 644],
+ ['Medicine', 'medicine,clinical,cardiovascular,cardiology,heart', 1376],
+ ['Medicine', 'oncology,surgery,cancer,clinical,medicine', 949],
+ ['Medicine', 'medicine,infectious,diseases,clinical,aids', 451],
+ ['Medicine', 'cell,molecular,biology,medicine,immunology', 315],
+ ['Pharmacology, Toxicology and Pharmaceutics',
+  'cell,molecular,biology,medicine,immunology',
+  234],
+ ['Physics and Astronomy',
+  'chemistry,materials,physics,polymer,engineering',
+  300],
+ ['Psychology', 'psychology,nursing,psychiatry,social,mental', 389],
+ ['Social Sciences', 'education,learning,teaching,language,teacher', 695],
+ ['Social Sciences', 'psychology,nursing,psychiatry,social,mental', 342],
+ ['Social Sciences', 'politics,law,social,history,sociology', 1179],
+ ['Social Sciences',
+  'linguistics,philosophy,language,history,psychology',
+  435]]
+);
+        var options = {
+          width: 700,
+          sankey: {
+            link: {
+              colorMode: 'gradient', // 渐变色模式
+            },
+            node: {
+              colors: ['#000099',
+ '#000099',
+ '#000099',
+ '#375623',
+ '#66FF66',
+ '#375623',
+ '#336699',
+ '#336699',
+ '#187402',
+ '#187402',
+ '#9A0000',
+ '#FC9320',
+ '#FF5C29',
+ '#FF5C29',
+ '#FE0000',
+ '#FE0000',
+ '#8FA329',
+ '#8FA329',
+ '#D20000',
+ '#D20000',
+ '#D20000',
+ '#D26B04',
+ '#FC9320',
+ '#FBFF57',
+ '#FBFF57',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#85D6FF',
+ '#FFCC00',
+ '#92D050',
+ '#66FF66',
+ '#66FF66',
+ '#66FF66']
+            }
+          }
+        };
+
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="sankey_chart" style="width: 1000px; height: 700px;"></div>
+  </body>
+</html>

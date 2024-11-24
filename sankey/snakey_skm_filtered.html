@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        
+        data.addRows(
+          [['Agricultural and Biological Sciences',
+  'plant,agriculture,biotechnology,biology,soil',
+  511],
+ ['Agricultural and Biological Sciences',
+  'ecology,entomology,biology,marine,zoology',
+  626],
+ ['Arts and Humanities',
+  'history,archaeology,philosophy,culture,literature',
+  1264],
+ ['Biochemistry, Genetics and Molecular Biology',
+  'cell,molecular,biology,genetics,cancer',
+  536],
+ ['Business, Management and Accounting',
+  'management,business,marketing,accounting,tourism',
+  595],
+ ['Chemistry', 'chemistry,materials,polymer,physics,catalysis', 277],
+ ['Earth and Planetary Sciences',
+  'earth,geology,environmental,water,geophysics',
+  433],
+ ['Economics, Econometrics and Finance',
+  'economics,finance,politics,economy,markets',
+  491],
+ ['Engineering', 'engineering,mechanic,materials,technology,civil', 558],
+ ['Environmental Science',
+  'earth,geology,environmental,water,geophysics',
+  222],
+ ['Materials Science', 'chemistry,materials,polymer,physics,catalysis', 311],
+ ['Mathematics', 'mathematics,physics,applications,algebra,equations', 618],
+ ['Medicine', 'nursing,medicine,public,clinical,education', 646],
+ ['Medicine', 'neurology,medicine,rehabilitation,sports,surgery', 544],
+ ['Medicine', 'psychology,psychiatry,social,mental,child', 381],
+ ['Medicine', 'dentistry,oral,surgery,ophthalmology,dermatology', 335],
+ ['Medicine', 'medicine,obstetrics,clinical,gynecology,pediatrics', 505],
+ ['Medicine', 'medicine,clinical,surgery,oncology,cardiovascular', 1490],
+ ['Medicine', 'cell,molecular,biology,genetics,cancer', 303],
+ ['Psychology', 'psychology,psychiatry,social,mental,child', 450],
+ ['Social Sciences', 'history,archaeology,philosophy,culture,literature', 254],
+ ['Social Sciences', 'education,learning,teaching,teacher,childhood', 728],
+ ['Social Sciences', 'linguistics,language,english,linguistic,teaching', 313],
+ ['Social Sciences', 'politics,law,social,sociology,affairs', 1231]]
+);
+        var options = {
+          width: 700,
+          sankey: {
+            link: {
+              colorMode: 'gradient', // 渐变色模式
+            },
+            node: {
+              colors: ['#000099',
+ '#000099',
+ '#000099',
+ '#375623',
+ '#375623',
+ '#336699',
+ '#336699',
+ '#187402',
+ '#187402',
+ '#9A0000',
+ '#FC9320',
+ '#FE0000',
+ '#FE0000',
+ '#8FA329',
+ '#8FA329',
+ '#D20000',
+ '#D20000',
+ '#D26B04',
+ '#FC9320',
+ '#FBFF57',
+ '#FBFF57',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#92D050',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#92D050',
+ '#66FF66',
+ '#66FF66',
+ '#66FF66',
+ '#66FF66']
+            }
+          }
+        };
+
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="sankey_chart" style="width: 1000px; height: 700px;"></div>
+  </body>
+</html>
