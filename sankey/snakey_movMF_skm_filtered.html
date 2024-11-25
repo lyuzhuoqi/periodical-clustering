@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        
+        data.addRows(
+          [['movMF: engineering,mechanic,technology,materials,energy',
+  'skm: engineering,mechanic,materials,technology,civil',
+  913],
+ ['movMF: intelligence,computing,information,artificial,engineering',
+  'skm: information,computing,intelligence,knowledge,ieee',
+  231],
+ ['movMF: intelligence,computing,information,artificial,engineering',
+  'skm: intelligence,ieee,computing,engineering,electric',
+  230],
+ ['movMF: management,business,marketing,accounting,entrepreneurship',
+  'skm: management,business,marketing,accounting,tourism',
+  814],
+ ['movMF: plant,food,agriculture,biotechnology,biology',
+  'skm: plant,agriculture,biotechnology,biology,soil',
+  549],
+ ['movMF: neurology,neuroscience,clinical,ophthalmology,brain',
+  'skm: neurology,medicine,rehabilitation,sports,surgery',
+  220],
+ ['movMF: sports,medicine,rehabilitation,orthopaedics,surgery',
+  'skm: neurology,medicine,rehabilitation,sports,surgery',
+  403],
+ ['movMF: education,learning,teaching,language,teacher',
+  'skm: education,learning,teaching,teacher,childhood',
+  670],
+ ['movMF: psychology,nursing,psychiatry,social,mental',
+  'skm: nursing,medicine,public,clinical,education',
+  559],
+ ['movMF: psychology,nursing,psychiatry,social,mental',
+  'skm: psychology,psychiatry,social,mental,child',
+  911],
+ ['movMF: ecology,entomology,biology,zoology,marine',
+  'skm: ecology,entomology,biology,marine,zoology',
+  704],
+ ['movMF: medicine,clinical,cardiovascular,cardiology,heart',
+  'skm: nursing,medicine,public,clinical,education',
+  308],
+ ['movMF: medicine,clinical,cardiovascular,cardiology,heart',
+  'skm: medicine,obstetrics,clinical,gynecology,pediatrics',
+  205],
+ ['movMF: medicine,clinical,cardiovascular,cardiology,heart',
+  'skm: medicine,clinical,surgery,oncology,cardiovascular',
+  804],
+ ['movMF: mathematics,applications,algebra,equations,physics',
+  'skm: mathematics,physics,applications,algebra,equations',
+  702],
+ ['movMF: economics,finance,politics,economy,markets',
+  'skm: economics,finance,politics,economy,markets',
+  642],
+ ['movMF: geology,earth,water,environmental,geophysics',
+  'skm: earth,geology,environmental,water,geophysics',
+  774],
+ ['movMF: politics,law,social,history,sociology',
+  'skm: politics,law,social,sociology,affairs',
+  1264],
+ ['movMF: oncology,surgery,cancer,clinical,medicine',
+  'skm: medicine,clinical,surgery,oncology,cardiovascular',
+  722],
+ ['movMF: medicine,infectious,diseases,clinical,aids',
+  'skm: medicine,obstetrics,clinical,gynecology,pediatrics',
+  293],
+ ['movMF: cell,molecular,biology,medicine,immunology',
+  'skm: food,chemistry,pharmaceutical,nutrition,medicinal',
+  281],
+ ['movMF: cell,molecular,biology,medicine,immunology',
+  'skm: cell,molecular,biology,genetics,cancer',
+  948],
+ ['movMF: chemistry,materials,physics,polymer,engineering',
+  'skm: chemistry,materials,polymer,physics,catalysis',
+  909],
+ ['movMF: linguistics,philosophy,language,history,psychology',
+  'skm: history,archaeology,philosophy,culture,literature',
+  427],
+ ['movMF: linguistics,philosophy,language,history,psychology',
+  'skm: linguistics,language,english,linguistic,teaching',
+  302],
+ ['movMF: history,literature,american,culture,jewish',
+  'skm: history,archaeology,philosophy,culture,literature',
+  774]]
+);
+        var options = {
+          width: 700,
+          sankey: {
+            link: {
+              colorMode: 'gradient', // 渐变色模式
+            },
+            node: {
+              colors: ['#D20000',
+ '#D20000',
+ '#FF5C29',
+ '#FF5C29',
+ '#FF5C29',
+ '#187402',
+ '#187402',
+ '#000099',
+ '#000099',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#66FF66',
+ '#66FF66',
+ '#7030A0',
+ '#7030A0',
+ '#92D050',
+ '#000099',
+ '#000099',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#FBFF57',
+ '#FBFF57',
+ '#8FA329',
+ '#8FA329',
+ '#FE0000',
+ '#FE0000',
+ '#66FF66',
+ '#66FF66',
+ '#7030A0',
+ '#7030A0',
+ '#336699',
+ '#85D6FF',
+ '#336699',
+ '#FC9320',
+ '#FC9320',
+ '#66FF66',
+ '#375623',
+ '#66FF66',
+ '#375623']
+            }
+          }
+        };
+
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="sankey_chart" style="width: 1000px; height: 700px;"></div>
+  </body>
+</html>
