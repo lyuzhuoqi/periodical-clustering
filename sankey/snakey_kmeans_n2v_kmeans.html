@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        
+        data.addRows(
+          [['kmeans: law,politics,studies,economics,european',
+  'n2v_kmeans: education,studies,politics,history,economics',
+  250],
+ ['kmeans: oncology,cancer,surgery,clinical,gastroenterology',
+  'n2v_kmeans: medicine,clinical,surgery,clinics,dentistry',
+  220],
+ ['kmeans: oncology,cancer,surgery,clinical,gastroenterology',
+  'n2v_kmeans: cancer,oncology,surgery,clinical,gastroenterology',
+  235],
+ ['kmeans: medicine,clinical,cardiovascular,cardiology,heart',
+  'n2v_kmeans: medicine,clinical,surgery,clinics,dentistry',
+  361],
+ ['kmeans: medicine,clinical,cardiovascular,cardiology,heart',
+  'n2v_kmeans: medicine,health,clinical,nursing,surgery',
+  246],
+ ['kmeans: medicine,clinical,cardiovascular,cardiology,heart',
+  'n2v_kmeans: medicine,de,surgery,revista,clinical',
+  299],
+ ['kmeans: medicine,clinical,cardiovascular,cardiology,heart',
+  'n2v_kmeans: clinical,medicine,cardiovascular,surgery,cardiology',
+  259],
+ ['kmeans: ecology,entomology,biology,zoology,conservation',
+  'n2v_kmeans: plant,ecology,biology,environmental,soil',
+  352],
+ ['kmeans: ecology,entomology,biology,zoology,conservation',
+  'n2v_kmeans: chemistry,engineering,plant,materials,agriculture',
+  306],
+ ['kmeans: psychology,psychiatry,mental,social,child',
+  'n2v_kmeans: psychology,education,language,psychiatry,neuroscience',
+  404],
+ ['kmeans: psychology,psychiatry,mental,social,child',
+  'n2v_kmeans: medicine,health,clinical,nursing,surgery',
+  203],
+ ['kmeans: chemistry,materials,polymer,engineering,catalysis',
+  'n2v_kmeans: materials,chemistry,engineering,polymer,technology',
+  260],
+ ['kmeans: chemistry,materials,polymer,engineering,catalysis',
+  'n2v_kmeans: engineering,materials,chemistry,physics,mechanic',
+  227],
+ ['kmeans: chemistry,materials,polymer,engineering,catalysis',
+  'n2v_kmeans: chemistry,engineering,plant,materials,agriculture',
+  246],
+ ['kmeans: geology,earth,geophysics,water,engineering',
+  'n2v_kmeans: chemistry,engineering,plant,materials,agriculture',
+  216],
+ ['kmeans: geology,earth,geophysics,water,engineering',
+  'n2v_kmeans: geology,earth,geophysics,sensing,remote',
+  218],
+ ['kmeans: studies,history,archaeology,de,literature',
+  'n2v_kmeans: history,studies,law,de,medieval',
+  244],
+ ['kmeans: studies,history,archaeology,de,literature',
+  'n2v_kmeans: studies,education,de,management,economics',
+  369],
+ ['kmeans: studies,history,archaeology,de,literature',
+  'n2v_kmeans: education,studies,politics,history,economics',
+  246],
+ ['kmeans: engineering,mechanic,materials,technology,structures',
+  'n2v_kmeans: engineering,materials,chemistry,physics,mechanic',
+  298],
+ ['kmeans: mathematics,analysis,applications,geometry,algebra',
+  'n2v_kmeans: mathematics,computing,systems,engineering,ieee',
+  211],
+ ['kmeans: mathematics,analysis,applications,geometry,algebra',
+  'n2v_kmeans: mathematics,physics,geometry,analysis,siam',
+  228],
+ ['kmeans: cell,biology,molecular,medicine,immunology',
+  'n2v_kmeans: medicine,clinical,surgery,clinics,dentistry',
+  256],
+ ['kmeans: cell,biology,molecular,medicine,immunology',
+  'n2v_kmeans: cell,biology,microbiology,molecular,food',
+  496],
+ ['kmeans: nursing,health,care,medicine,public',
+  'n2v_kmeans: health,nursing,medicine,care,clinical',
+  412],
+ ['kmeans: nursing,health,care,medicine,public',
+  'n2v_kmeans: medicine,health,clinical,nursing,surgery',
+  251],
+ ['kmeans: plant,food,agriculture,biotechnology,biology',
+  'n2v_kmeans: chemistry,engineering,plant,materials,agriculture',
+  276],
+ ['kmeans: studies,social,culture,sociology,communication',
+  'n2v_kmeans: studies,education,de,management,economics',
+  243],
+ ['kmeans: studies,social,culture,sociology,communication',
+  'n2v_kmeans: education,studies,politics,history,economics',
+  416],
+ ['kmeans: economics,management,business,finance,accounting',
+  'n2v_kmeans: studies,education,de,management,economics',
+  308],
+ ['kmeans: economics,management,business,finance,accounting',
+  'n2v_kmeans: education,studies,politics,history,economics',
+  338],
+ ['kmeans: economics,management,business,finance,accounting',
+  'n2v_kmeans: politics,management,studies,business,marketing',
+  230],
+ ['kmeans: education,learning,teaching,higher,teacher',
+  'n2v_kmeans: education,studies,politics,history,economics',
+  338]]
+);
+
+        var options = {
+          width: 700,
+          sankey: {
+            link: {
+              colorMode: 'gradient', // 渐变色模式
+            },
+            node: {
+              colors: ['#66FF66',
+ '#66FF66',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#000099',
+ '#000099',
+ '#000099',
+ '#92D050',
+ '#66FF66',
+ '#9A0000',
+ '#FC9320',
+ '#D20000',
+ '#FE0000',
+ '#FE0000',
+ '#375623',
+ '#375623',
+ '#66FF66',
+ '#D20000',
+ '#FBFF57',
+ '#FBFF57',
+ '#FBFF57',
+ '#336699',
+ '#336699',
+ '#7030A0',
+ '#7030A0',
+ '#000099',
+ '#66FF66',
+ '#187402',
+ '#66FF66',
+ '#66FF66']
+            }
+          }
+        };
+
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="sankey_chart" style="width: 1000px; height: 700px;"></div>
+  </body>
+</html>

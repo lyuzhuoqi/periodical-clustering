@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        
+        data.addRows(
+          [['Scopus: plant,food,entomology,agriculture,ecology',
+  'n2v_kmeans: plant,ecology,biology,environmental,soil',
+  447],
+ ['Scopus: plant,food,entomology,agriculture,ecology',
+  'n2v_kmeans: chemistry,engineering,plant,materials,agriculture',
+  526],
+ ['Scopus: history,studies,philosophy,religion,literature',
+  'n2v_kmeans: history,studies,law,de,medieval',
+  237],
+ ['Scopus: history,studies,philosophy,religion,literature',
+  'n2v_kmeans: studies,education,de,management,economics',
+  451],
+ ['Scopus: history,studies,philosophy,religion,literature',
+  'n2v_kmeans: education,studies,politics,history,economics',
+  353],
+ ['Scopus: cell,biology,molecular,genetics,biotechnology',
+  'n2v_kmeans: cell,biology,microbiology,molecular,food',
+  294],
+ ['Scopus: management,business,marketing,accounting,tourism',
+  'n2v_kmeans: education,studies,politics,history,economics',
+  217],
+ ['Scopus: engineering,mechanic,ieee,electric,systems',
+  'n2v_kmeans: engineering,materials,chemistry,physics,mechanic',
+  205],
+ ['Scopus: engineering,mechanic,ieee,electric,systems',
+  'n2v_kmeans: mathematics,engineering,systems,information,computing',
+  214],
+ ['Scopus: mathematics,statistics,applications,analysis,algebra',
+  'n2v_kmeans: mathematics,physics,geometry,analysis,siam',
+  219],
+ ['Scopus: medicine,surgery,health,clinical,cancer',
+  'n2v_kmeans: health,nursing,medicine,care,clinical',
+  472],
+ ['Scopus: medicine,surgery,health,clinical,cancer',
+  'n2v_kmeans: medicine,clinical,surgery,clinics,dentistry',
+  1004],
+ ['Scopus: medicine,surgery,health,clinical,cancer',
+  'n2v_kmeans: medicine,health,clinical,nursing,surgery',
+  1014],
+ ['Scopus: medicine,surgery,health,clinical,cancer',
+  'n2v_kmeans: cancer,oncology,surgery,clinical,gastroenterology',
+  310],
+ ['Scopus: medicine,surgery,health,clinical,cancer',
+  'n2v_kmeans: medicine,de,surgery,revista,clinical',
+  958],
+ ['Scopus: medicine,surgery,health,clinical,cancer',
+  'n2v_kmeans: clinical,medicine,cardiovascular,surgery,cardiology',
+  420],
+ ['Scopus: psychology,psychotherapy,cognitive,child,psicologia',
+  'n2v_kmeans: psychology,education,language,psychiatry,neuroscience',
+  228],
+ ['Scopus: education,law,studies,politics,social',
+  'n2v_kmeans: psychology,education,language,psychiatry,neuroscience',
+  238],
+ ['Scopus: education,law,studies,politics,social',
+  'n2v_kmeans: studies,education,de,management,economics',
+  736],
+ ['Scopus: education,law,studies,politics,social',
+  'n2v_kmeans: education,studies,politics,history,economics',
+  1078],
+ ['Scopus: education,law,studies,politics,social',
+  'n2v_kmeans: politics,management,studies,business,marketing',
+  427]]
+);
+
+        var options = {
+          width: 700,
+          sankey: {
+            link: {
+              colorMode: 'gradient', // 渐变色模式
+            },
+            node: {
+              colors: ['#000099',
+ '#000099',
+ '#000099',
+ '#375623',
+ '#375623',
+ '#66FF66',
+ '#66FF66',
+ '#336699',
+ '#336699',
+ '#187402',
+ '#D20000',
+ '#D20000',
+ '#D20000',
+ '#FBFF57',
+ '#FBFF57',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#7030A0',
+ '#92D050',
+ '#66FF66',
+ '#66FF66',
+ '#66FF66']
+            }
+          }
+        };
+
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="sankey_chart" style="width: 1000px; height: 700px;"></div>
+  </body>
+</html>

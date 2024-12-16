@@ -20,7 +20,7 @@ def pow10ceil(x):
     # 101, 500 -> 1000
     return 10**math.ceil(math.log(x, 10))
 
-disc2color = {'Chemical Engineering': '#6C0000',
+Scopus2color = {'Chemical Engineering': '#6C0000',
                 'Chemistry': '#9A0000',
                 'Computer Science': '#FF5C29',
                 'Earth and Planetary Sciences': '#FE0000',
@@ -51,3 +51,10 @@ disc2color = {'Chemical Engineering': '#6C0000',
                 'Pharmacology, Toxicology and Pharmaceutics': '#85D6FF',
 
                 'Multidisciplinary': '#000000'}
+
+periodical_title_stopwords = ['the', 'and', 'of', 'to', 'in', 'a', 'for', 'is', 'on', 'that', 
+                               'de', 'di', 'des', 'del',
+                               'medizinische', 'clinica', 'wochenschrift', 'rendiconti',
+                               'journal', 'letters', 'studies', 'international', 'transactions', 'acta', 
+                               'revista', 'research', 'review', 
+                               'sciences', 'science', 'chinese', 'theory', 'sinica', 'applied', 'applications']
