@@ -22,7 +22,7 @@ class CitationTrailDataset(Dataset):
 
     def __getitem__(self, idx):
         trail = self.citation_trails[idx]
-        trail = [self.pid_to_idx.get(pid, self.pad_value) for pid in trail]
+        trail = [self.pid_to_idx.get(pid, self.pad_value) for pid in trail] # 未知 PID (出现次数小于min_count) 用 pad_value 替换
         if len(trail) > self.max_length:
             trail = trail[:self.max_length]
         trail += [self.pad_value] * (self.max_length - len(trail))
@@ -103,19 +103,19 @@ class CitationTrailModel(pl.LightningModule):
         # 可以在每个 epoch 结束时打印一些信息
         pass
 
-def main(resume_ckpt=None, lr=5e-5, batchsize=2048): 
+def main(resume_ckpt=None, lr=5e-5, batchsize=2048, min_count=50): 
     # 读取 PID 到索引的映射
     print("Loading PID to index mapping...")
-    with open("pid_to_idx.pkl", "rb") as f:
+    with open(f"pid_to_idx_min_count_{min_count}.pkl", "rb") as f:
         pid_to_idx = pickle.load(f)
-    print("PID to model input IDs:", dict(islice(pid_to_idx.items(), 10)))  # 仅打印前10项
+    print(f"PID {len(pid_to_idx)} mapped to model input IDs:", dict(islice(pid_to_idx.items(), 10)))  # 仅打印前10项
 
     # 初始化模型
     model = CitationTrailModel(pid_to_idx, learning_rate=lr, batchsize=batchsize)
 
     # 使用 PyTorch Lightning 的 Trainer 来训练模型
     checkpoint_callback = ModelCheckpoint(
-        dirpath='./checkpoints',
+        dirpath=f'./checkpoints/min_count_{min_count}',
         filename='checkpoint-{epoch}',
         save_top_k=-1,  # 保存所有 epoch 的 checkpoint
         every_n_epochs=1,
@@ -136,8 +136,8 @@ if __name__ == "__main__":
     parser.add_argument('--resume_ckpt', type=int, default=None, help='Epoch number to resume from')
     parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate for the optimizer')
     parser.add_argument('--batchsize', type=int, default=2048, help='Batch size for training')
-
+    parser.add_argument('--min_count', type=int, default=50, help='Minimum count of a PID to be included in the model')
     args = parser.parse_args()
 
     # 调用 main 函数并传递参数
-    main(args.resume_ckpt, args.lr, args.batchsize)
+    main(args.resume_ckpt, args.lr, args.batchsize, args.min_count)
