@@ -233,12 +233,12 @@ ckpt_callback = ModelCheckpoint(
 trainer = L.Trainer(
     accelerator='gpu',
     devices=torch.cuda.device_count(),
-    max_epochs=10,
+    max_epochs=5,
     callbacks=[
         ModelCheckpoint(
             monitor='val_loss',  # 改为监控验证损失
             dirpath=ckpt_dir,
-            filename='directed_gat-{epoch:02d}-{val_loss:.2f}-{val_auc:.3f}',
+            filename='gnn-{epoch:02d}-{val_loss:.2f}-{val_auc:.3f}',
             save_top_k=3,
             mode='min'
         ),

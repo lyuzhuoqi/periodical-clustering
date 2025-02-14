@@ -1,10 +1,12 @@
 import torch
-# 设置矩阵乘法精度为 'high' 以平衡性能和精度
-torch.set_float32_matmul_precision('high')
-from torch_geometric.nn import GATConv
+from torch_geometric.nn import MessagePassing
 import torch.nn.functional as F
+import torch.nn as nn
 import random
 import lightning as L
+
+# 设置矩阵乘法精度为 'high' 以平衡性能和精度
+torch.set_float32_matmul_precision('high')
 
 class CombinedLoss(torch.nn.Module):
     def __init__(self, alpha=0.5, beta=0.3, margin=1.0):
@@ -36,59 +38,51 @@ class CombinedLoss(torch.nn.Module):
         
         return exist_loss + self.alpha * weight_loss + self.beta * rank_loss
     
-class DirectedGAT(L.LightningModule):
-    def __init__(self, in_dim, out_dim, heads=8, dropout=0.2):
+class SimpleDirectedGNN(L.LightningModule):
+    def __init__(self, in_dim, hidden_dim, embedding_dim, dropout=0.1):
         super().__init__()
-        # 添加dropout和层归一化
-        self.dropout = torch.nn.Dropout(dropout)
-        self.norm1 = torch.nn.LayerNorm(out_dim * heads)
-        self.norm2 = torch.nn.LayerNorm(out_dim)
         
-        # GAT层保持不变
-        self.in_conv1 = GATConv(in_dim, out_dim, heads=heads, edge_dim=1)
-        self.out_conv1 = GATConv(in_dim, out_dim, heads=heads, edge_dim=1)
-        self.in_conv2 = GATConv(out_dim * heads, out_dim, heads=1, concat=False, edge_dim=1)
-        self.out_conv2 = GATConv(out_dim * heads, out_dim, heads=1, concat=False, edge_dim=1)
+        # 基础层
+        self.encoder = nn.Linear(in_dim, hidden_dim)
         
-        # 改进特征合并层
-        self.merge = torch.nn.Sequential(
-            torch.nn.Linear(out_dim * 2, out_dim),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(dropout),
-            torch.nn.Linear(out_dim, out_dim)
-        )
+        # 有向图卷积层
+        self.conv = DirectedConv(hidden_dim, hidden_dim)
+        
+        # 输出层
+        self.output = nn.Linear(hidden_dim, embedding_dim)
+        
+        self.dropout = dropout
         self.loss_fn = CombinedLoss()
-
+        
     def forward(self, data):
         x, edge_index, edge_weight = data.x, data.edge_index, data.edge_attr
         
-        # 处理入边
-        x_in = F.relu(self.in_conv1(x, edge_index, edge_weight))
-        x_in = self.in_conv2(x_in, edge_index, edge_weight)
+        # 初始特征编码
+        x = self.encoder(x)
+        x = F.relu(x)
+        x = F.dropout(x, p=self.dropout, training=self.training)
         
-        # 处理出边（翻转边的方向）
-        edge_index_rev = torch.stack([edge_index[1], edge_index[0]], dim=0)
-        x_out = F.relu(self.out_conv1(x, edge_index_rev, edge_weight))
-        x_out = self.out_conv2(x_out, edge_index_rev, edge_weight)
+        # 处理入边和出边
+        x_in = self.conv(x, edge_index, edge_weight)
+        x_out = self.conv(x, edge_index.flip([0]), edge_weight)
         
-        # 合并入边和出边的特征
-        x = self.merge(torch.cat([x_in, x_out], dim=-1))
-        return x
+        # 合并并生成最终嵌入
+        x = x_in + x_out
+        x = F.relu(x)
+        x = F.dropout(x, p=self.dropout, training=self.training)
+        
+        return self.output(x)
 
     def get_neg_edges(self, edge_set, num_nodes, num_samples, device):
         neg_edges = []
-        
-        # 基于正边的权重分布进行负采样
         while len(neg_edges) < num_samples:
             u = random.randint(0, num_nodes - 1)
             v = random.randint(0, num_nodes - 1)
-            if u != v and (u, v) not in edge_set:  # 只检查单向
+            if u != v and (u, v) not in edge_set:
                 neg_edges.append((u, v))
-                
         return torch.tensor(neg_edges, dtype=torch.long).t().contiguous().to(device)
-    
+
     def compute_auc(self, pos_score, neg_score):
-        """计算AUC分数"""
         scores = torch.cat([pos_score, neg_score]).cpu()
         labels = torch.cat([
             torch.ones_like(pos_score),
@@ -103,25 +97,21 @@ class DirectedGAT(L.LightningModule):
         edge_weights = batch.edge_attr
         num_pos = pos_edges.size(1)
         
-        # 构建方向感知的边集合
         edge_set = set(zip(pos_edges[0].cpu().numpy(), pos_edges[1].cpu().numpy()))
         neg_edges = self.get_neg_edges(edge_set, batch.x.size(0), num_pos, batch.x.device)
 
-        # 计算方向感知的分数
         pos_score = (out[pos_edges[0]] * out[pos_edges[1]]).sum(dim=1)
         neg_score = (out[neg_edges[0]] * out[neg_edges[1]]).sum(dim=1)
 
-        # 计算组合损失
         loss = self.loss_fn(pos_score, neg_score, edge_weights)
         
-        # 记录额外的指标
         with torch.no_grad():
             auc = self.compute_auc(pos_score, neg_score)
-            self.log('train_auc', auc, prog_bar=True)
+            self.log('train_auc', auc, prog_bar=True, batch_size=batch.num_nodes)
         
-        self.log('train_loss', loss, prog_bar=True)
+        self.log('train_loss', loss, prog_bar=True, batch_size=batch.num_nodes)
         return loss
-    
+
     def validation_step(self, batch):
         out = self(batch)
         pos_edges = batch.edge_index
@@ -137,17 +127,17 @@ class DirectedGAT(L.LightningModule):
         loss = self.loss_fn(pos_score, neg_score, edge_weights)
         auc = self.compute_auc(pos_score, neg_score)
         
-        self.log('val_loss', loss)
-        self.log('val_auc', auc)
+        self.log('val_loss', loss, batch_size=batch.num_nodes)
+        self.log('val_auc', auc, batch_size=batch.num_nodes)
         return {'val_loss': loss, 'val_auc': auc}
 
     def configure_optimizers(self):
-        opt = torch.optim.Adam(self.parameters(), lr=0.01)  # 降低学习率
+        opt = torch.optim.Adam(self.parameters(), lr=0.01)
         sched = torch.optim.lr_scheduler.ReduceLROnPlateau(
             opt, 
             mode='min',
             factor=0.5,
-            patience=5,  # 减少patience以更快响应
+            patience=5,
             min_lr=1e-5
         )
         return {
@@ -157,6 +147,26 @@ class DirectedGAT(L.LightningModule):
                 'monitor': 'train_loss'
             }
         }
+
+class DirectedConv(MessagePassing):
+    def __init__(self, in_channels, out_channels):
+        super().__init__(aggr='add')
+        
+        self.linear = nn.Linear(in_channels, out_channels)
+        self.edge_encoder = nn.Linear(1, out_channels)
+        
+    def forward(self, x, edge_index, edge_weight=None):
+        x = self.linear(x)
+        
+        if edge_weight is None:
+            edge_weight = torch.ones(edge_index.size(1), device=x.device)
+        
+        edge_embedding = self.edge_encoder(edge_weight.unsqueeze(-1))
+        
+        return self.propagate(edge_index, x=x, edge_attr=edge_embedding)
+    
+    def message(self, x_j, edge_attr):
+        return x_j * edge_attr
     
 def get_node_embeddings(model, graph_data):
     """
@@ -262,17 +272,17 @@ def load_large_graph():
 
 # 使用示例：
 # 1. 加载一个图
-test_graph = load_large_graph()  # 替换成你的图文件路径
+test_graph = load_large_graph()
 
 # 2. 加载训练好的模型
-checkpoint_path = 'data/GNN/directed_gat-epoch=18-val_loss=1.26-val_auc=0.935.ckpt'
+checkpoint_path = 'data/GNN/directed_gat-epoch=09-val_loss=1.26-val_auc=0.945.ckpt'
 # 使用保存的最佳模型
 
-trained_model = DirectedGAT.load_from_checkpoint(
+trained_model = SimpleDirectedGNN.load_from_checkpoint(
     checkpoint_path,
-    in_dim=100,
-    out_dim=128,
-    heads=4,
+    in_dim=100,          # 输入特征维度
+    hidden_dim=256,      # 隐藏层维度
+    embedding_dim=128,   # 输出嵌入维度
     dropout=0.1
 )
 

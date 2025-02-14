@@ -40,7 +40,7 @@ class GraphSampler:
         perm = torch.randperm(num_nodes_total)[:num_sample]
         
         # Extract the induced subgraph for the selected nodes
-        edge_index, _ = subgraph(perm, data.edge_index, relabel_nodes=True)
+        edge_index, edge_attr = subgraph(perm, data.edge_index, relabel_nodes=True)
         
         # Record statistics (node and edge counts)
         self.node_counts.append(len(perm))
@@ -50,6 +50,7 @@ class GraphSampler:
         subgraph_data = Data(
             x=data.x[perm],
             edge_index=edge_index,
+            edge_attr=edge_attr,
             original_indices=perm  # Save original node indices
         )
         
