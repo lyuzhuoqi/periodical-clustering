@@ -52,6 +52,35 @@ Scopus2color = {'Chemical Engineering': '#6C0000',
 
                 'Multidisciplinary': '#000000'}
 
+Scopus2abbr = {"Biochemistry, Genetics and Molecular Biology": "Biochem",
+               "Earth and Planetary Sciences": "Earth",
+               "Medicine": "Med",
+               "Physics and Astronomy": "Phys",
+               "Agricultural and Biological Sciences": "Bio",
+               "Immunology and Microbiology": "Immuno",
+               "Chemistry": "Chem",
+               "Neuroscience": "Neuro",
+               "Materials Science": "Mat",
+               "Social Sciences": "Soc",
+               "Environmental Science": "Env",
+               "Engineering": "Eng",
+               "Pharmacology, Toxicology and Pharmaceutics": "Pharm",
+               "Psychology": "Psy",
+               "Arts and Humanities": "Arts",
+               "Mathematics": "Math",
+               "Veterinary": "Vet",
+               "Chemical Engineering": "ChemEng",
+               "Economics, Econometrics and Finance": "Econ",
+               "Nursing": "Nurs",
+               "Computer Science": "CS",
+               "Energy": "Energy",
+               "Dentistry": "Dent",
+               "Business, Management and Accounting": "Bus",
+               "Health Professions": "HealthPro",
+               "Decision Sciences": "Dec",
+               'Multidisciplinary': 'Multi'
+               }
+
 periodical_title_stopwords = ['the', 'and', 'of', 'to', 'in', 'a', 'for', 'is', 'on', 'that', 
                                'de', 'di', 'des', 'del',
                                'medizinische', 'clinica', 'wochenschrift', 'rendiconti',
@@ -98,3 +127,4 @@ corrupted_venue_name_list = ['Japanese Journal of Pharmacology',
                              'Journal of Programming Languages',
                              'Fuel and Energy Abstracts',
                             ]
+
