@@ -3,6 +3,9 @@ import json
 import argparse
 from tqdm.auto import tqdm
 import pathlib
+import pyarrow as pa
+import pyarrow.parquet as pq
+import numpy as np
 import torch
 
 class StreamingDataset:
@@ -23,7 +26,6 @@ class StreamingDataset:
         batch = []
         batch_ids = []
         for data in self._read_lines():
-            # 拼接title和abstract，处理abstract缺失情况
             text = data.get('abstract1', '')
             batch.append(text)
             batch_ids.append(data['PaperID'])
@@ -79,16 +81,37 @@ def main():
     # 确保输出目录存在
     pathlib.Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     
-    # 逐batch处理并写入结果
-    with open(args.output, 'w') as fout:
-        for inputs, batch_ids in tqdm(dataset.batches(), desc="Processing"):
-            embeddings = model.embed(inputs)
-            for paper_id, emb in zip(batch_ids, embeddings):
-                # 直接写入文件，不保存到内存
-                fout.write(json.dumps({
-                    "PaperID": paper_id,
-                    "embedding": emb.cpu().numpy().tolist()
-                }) + '\n')
+    # 使用PyArrow写入Parquet
+    schema = pa.schema([
+        ('PaperID', pa.string()),
+        ('embedding', pa.list_(pa.float32()))  # 使用float32
+    ])
+    
+    writer = pq.ParquetWriter(
+        args.output, 
+        schema, 
+        compression='ZSTD',  # 使用Zstandard压缩
+        flavor='spark'
+    )
+    
+    for inputs, batch_ids in tqdm(dataset.batches(), total=23322430 // args.batch_size):
+        embeddings = model.embed(inputs).cpu().numpy().astype(np.float32)
+        
+        # 转换为PyArrow数组
+        ids_array = pa.array(batch_ids)
+        emb_array = pa.array(embeddings.tolist())  # 转换为Python list
+        
+        # 创建RecordBatch
+        batch = pa.RecordBatch.from_arrays(
+            [ids_array, emb_array],
+            schema=schema
+        )
+        
+        # 直接写入批次数据
+        writer.write_batch(batch)
+    
+    # 关闭写入器
+    writer.close()
 
 if __name__ == '__main__':
     main()
