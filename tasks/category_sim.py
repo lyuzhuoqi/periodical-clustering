@@ -1,12 +1,11 @@
 import numpy as np
 import json
 import pyarrow.parquet as pq
+import pickle
 import pandas as pd
-import faiss
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm.auto import tqdm
-import os
 import argparse
 
 class CategorySimilarityAnalyzer:
@@ -43,10 +42,7 @@ class CategorySimilarityAnalyzer:
         print("Loaded labels data:", len(labels_df), "papers")
         
         # 合并数据并进行归一化
-        self.full_df = embeddings_df.join(labels_df, how='inner').dropna()
-        # 预处理嵌入向量
-        self.full_df['embedding'] = self.full_df['embedding'].apply(
-            lambda x: x / np.linalg.norm(x))  # 预归一化
+        self.full_df = embeddings_df.join(labels_df, how='inner')
         
         self.unique_labels = sorted(self.full_df['label'].unique())
         self.label_to_idx = {label: i for i, label in enumerate(self.unique_labels)}
@@ -114,6 +110,10 @@ class CategorySimilarityAnalyzer:
 
     def report_results(self):
         """生成统计报告和可视化结果"""
+        with open("category_similarity_metrics.pkl", "wb") as f:
+            pickle.dump(self.metrics, f)
+        print("Metrics saved to category_similarity_metrics.pkl")
+
         # 计算统计量
         valid_trials = ~np.isnan(self.metrics['intra'])
         intra_means = np.nanmean(self.metrics['intra'], axis=0)
@@ -148,7 +148,7 @@ class CategorySimilarityAnalyzer:
         plt.title(f"Category Similarity Heatmap (Averaged over {self.n_trials} trials)")
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
-        plt.savefig("category_similarity_heatmap.png", dpi=300)
+        plt.savefig("category_similarity_heatmap.pdf", dpi=300)
         plt.close()
 
         # 绘制分布图
@@ -158,7 +158,7 @@ class CategorySimilarityAnalyzer:
         plt.title("Similarity Distribution Across Categories")
         plt.xlabel("Cosine Similarity")
         plt.legend()
-        plt.savefig("similarity_distribution.png", dpi=150)
+        plt.savefig("similarity_distribution.pdf", dpi=300)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="执行大规模分类相似度分析")

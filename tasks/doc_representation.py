@@ -26,7 +26,7 @@ class StreamingDataset:
         batch = []
         batch_ids = []
         for data in self._read_lines():
-            text = data.get('abstract1', '')
+            text = data.get('abstract')
             batch.append(text)
             batch_ids.append(data['PaperID'])
             
