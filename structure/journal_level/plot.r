@@ -34,8 +34,10 @@ cluster2color <- c(
     '25' = '#66FF66'
 )
 
-edges <- read_csv("structure/journal_level/edge_filtered.csv", col_types = cols())
-nodes <- read_csv("structure/journal_level/node_filtered.csv", col_types = cols())
+# edges <- read_csv("data/2010s/journal_citation_net/edge_filtered.csv", col_types = cols())
+# nodes <- read_csv("data/2010s/journal_citation_net/node_filtered.csv", col_types = cols())
+edges <- read_csv("data/2010s/journal_citation_net/edge.csv", col_types = cols())
+nodes <- read_csv("data/2010s/journal_citation_net/node.csv", col_types = cols())
 
 cat(sprintf("Number of nodes: %d\n", nrow(nodes)))
 cat(sprintf("Number of edges: %d\n", nrow(edges)))
@@ -49,7 +51,7 @@ if (any(is.loop(g))) {
 }
 cat("Graph created\n")
 
-layout_file <- "structure/journal_level/neulay_results/2d/fdl_iter_01001.csv"
+layout_file <- "data/2010s/journal_citation_net/neulay_results/GATConv_2d_test/gcn_iter_00200.csv"
 
 cat("Reading layout from file\n")
 layout_df <- read_csv(layout_file, col_names = FALSE, col_types = cols())
@@ -69,13 +71,13 @@ cat("Plotting\n")
 # 可视化
 p <- ggraph(tg, layout = "manual", x = x, y = y) +
   geom_node_point(aes(color = color), size = 0.1, alpha = 1, show.legend = FALSE) +
-  # geom_edge_link(alpha = 0.05, colour = "grey70", width = 0.05) +
-  geom_edge_bundle_minimal0(# directed=TRUE, 
-                            edge_alpha = 0.05,
-                            edge_width = 0.05,
-                            edge_colour = "grey70") +
+  geom_edge_link(alpha = 0.05, colour = "grey70", width = 0.05) +
+  # geom_edge_bundle_minimal0(# directed=TRUE, 
+  #                           edge_alpha = 0.05,
+  #                           edge_width = 0.05,
+  #                           edge_colour = "grey70") +
   theme_void() +
   ggtitle("Journal-Level Citation Network")
 
-ggsave("structure/journal_level/journal_citation_map_no_bundle.svg", plot = p, width = 10, height = 10, dpi = 300)
+ggsave("structure/journal_level/journal_citation_network.svg", plot = p, width = 10, height = 10, dpi = 300)
 cat("Plot saved as journal_citation_map_no_bundle.svg\n")
