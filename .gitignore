@@ -1,4 +1,7 @@
 data/
 software/
 lightning_logs/
-tasks/arvhive/
+tasks/archive/
+archive/
+slash_piles/
+__pycache__/
