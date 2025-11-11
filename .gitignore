@@ -3,5 +3,5 @@ software/
 lightning_logs/
 tasks/archive/
 archive/
-slash_piles/
+slush_piles/
 __pycache__/
