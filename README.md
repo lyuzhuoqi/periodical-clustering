@@ -9,4 +9,4 @@ Table 2: ```tasks\topic_consistency```
 # Structure of Science
 The Sankey diagram (Fig. 2): ```Sankey```
 
-The map of Science (Fig. 3): ```Structure```
+The map of science (Fig. 3): ```Structure```
